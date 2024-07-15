@@ -176,14 +176,7 @@ wallets = [
 ]
 
 def increment_hex(hex_str):
-    # # Remove o prefixo '0x' se existir
-    # if hex_str.startswith('0x'):
-    #     hex_str = hex_str[2:]
-
-    # val = int(hex_str, base=16)
-    # incremented_hex_str = hex(val + 1)
-    # hex_str = incremented_hex_str
-    #**********************************
+   
     if hex_str is None:
         raise ValueError("A string hexadecimal não pode ser None")
 
@@ -194,9 +187,7 @@ def increment_hex(hex_str):
     # Converte a string hexadecimal para um número decimal, incrementa e converte de volta para hexadecimal
     val = int(hex_str, 16)
     incremented_hex_str = hex(val + 1)
-    # Mantém o comprimento original da string hexadecimal preenchendo com zeros à esquerda, se necessário
-    #incremented_hex_str = incremented_hex_str.zfill(len(hex_str))
-
+    
     return incremented_hex_str
 
 def gpu_worker(active_workers, lock, file_path, stop_event):
@@ -249,8 +240,8 @@ def gpu_worker(active_workers, lock, file_path, stop_event):
     try:
         while not stop_event.is_set():
             # Executa a operação na GPU
-            #with tf.device('/GPU:0'):
-            workerrun()
+            with tf.device('/GPU:0'):
+                workerrun()
             
 
             #time.sleep(1)  # Evita uma geração excessivamente rápida
@@ -282,10 +273,10 @@ if __name__ == "__main__":
 
     
     for _ in range(num_processes):
-        with tf.device('/GPU:0'):# Inicia os processos de workers
-            p = multiprocessing.Process(target=gpu_worker, args=(active_workers, lock, file_path, stop_event))
-            p.start()
-            processes.append(p)
+        #with tf.device('/GPU:0'):# Inicia os processos de workers
+        p = multiprocessing.Process(target=gpu_worker, args=(active_workers, lock, file_path, stop_event))
+        p.start()
+        processes.append(p)
 
     # Inicia o processo de monitoramento
     monitor_process = multiprocessing.Process(target=monitor_active_workers, args=(active_workers, stop_event))
