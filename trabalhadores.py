@@ -19,10 +19,10 @@ def worker_kernel(start, end, step, results):
     for i in range(idx * step + start, min((idx + 1) * step + start, end), stride):
         decimal_value = i
         bytes_arr = cuda.local.array(shape=32, dtype=numba.uint8)
-        for i in range(32):
-            bytes_arr[32 - i - 1] = decimal_value & 0xFF
-            decimal_value >>= 8
-        priv_key_bytes = bytes_arr
+        #for i in range(32):
+        #    bytes_arr[32 - i - 1] = decimal_value & 0xFF
+        #    decimal_value >>= 8
+        #priv_key_bytes = bytes_arr
         #priv_key_bytes = decimal_to_bytes(decimal_value,32)  # Chamada da função de conversão
         
         results[idx * step + i - start] = decimal_value  # Armazena apenas o valor decimal por simplicidade
